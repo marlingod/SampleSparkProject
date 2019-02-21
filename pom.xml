@@ -2,9 +2,11 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.mostval.spark</groupId>
   <artifactId>EnvApp</artifactId>
-  <version>1.0</version>
+    <packaging>pom</packaging>
+    <version>1.0</version>
   <inceptionYear>2008</inceptionYear>
-  <properties>
+
+    <properties>
     <scala.version>2.11.8</scala.version>
     <scala.compat.version>2.11.8</scala.compat.version>
     <scala.binary.version>2.11</scala.binary.version>
@@ -222,49 +224,39 @@
                 </execution>
             </executions>
         </plugin>
+        <plugin>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <configuration>
+                <finalName>SampleProject</finalName>
+                <appendAssemblyId>false</appendAssemblyId>
+                <archive>
+                    <manifest>
+                        <mainClass>com.mostval.spark.SampleProject</mainClass>
+                    </manifest>
+                </archive>
+                <descriptorRefs>
+                    <descriptorRef>jar-with-dependencies</descriptorRef>
+                </descriptorRefs>
+            </configuration>
+        </plugin>
+
 
         <plugin>
+            <!-- Build an executable JAR -->
             <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-shade-plugin</artifactId>
-            <version>2.2</version>
+            <artifactId>maven-jar-plugin</artifactId>
+            <version>3.1.0</version>
             <configuration>
-                <shadedArtifactAttached>false</shadedArtifactAttached>
-                <outputFile>target/KairosDbLoader.jar</outputFile>
-                <artifactSet>
-                    <includes>
-                        <include>*:*</include>
-                    </includes>
-                </artifactSet>
-                <filters>
-                    <filter>
-                        <artifact>*:*</artifact>
-                        <excludes>
-                            <exclude>META-INF/*.SF</exclude>
-                            <exclude>META-INF/*.DSA</exclude>
-                            <exclude>META-INF/*.RSA</exclude>
-                        </excludes>
-                    </filter>
-                </filters>
+                <archive>
+                    <manifest>
+                        <addClasspath>true</addClasspath>
+                        <classpathPrefix>lib/</classpathPrefix>
+                        <mainClass>com.mostval.spark.SampleProject</mainClass>
+                    </manifest>
+                </archive>
             </configuration>
-            <executions>
-                <execution>
-                    <phase>package</phase>
-                    <goals>
-                        <goal>shade</goal>
-                    </goals>
-                    <configuration>
-                        <transformers>
-                            <transformer
-                                    implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
-                            <transformer
-                                    implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-                                <resource>reference.conf</resource>
-                            </transformer>
-                        </transformers>
-                    </configuration>
-                </execution>
-            </executions>
         </plugin>
+
         <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-eclipse-plugin</artifactId>
